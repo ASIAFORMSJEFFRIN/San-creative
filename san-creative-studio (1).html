@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAN Creative Studio – Design & AI Agency</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f2ee;
+    --accent: #ff4d00;
+    --accent2: #c8ff00;
+    --muted: #888580;
+    --border: rgba(255,255,255,0.08);
+  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--black); color: var(--white); font-family: 'DM Sans', sans-serif; font-weight: 300; overflow-x: hidden; cursor: none; }
+
+  .cursor { width: 12px; height: 12px; background: var(--accent); border-radius: 50%; position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; transition: transform 0.15s ease, width 0.3s, height 0.3s; transform: translate(-50%, -50%); }
+  .cursor-ring { width: 36px; height: 36px; border: 1px solid rgba(255,77,0,0.4); border-radius: 50%; position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 4rem; backdrop-filter: blur(20px); background: rgba(10,10,10,0.75); border-bottom: 1px solid var(--border); transition: padding 0.3s; }
+  .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.5rem; letter-spacing: -0.02em; color: var(--white); text-decoration: none; }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; letter-spacing: 0.06em; text-transform: uppercase; transition: color 0.3s; position: relative; }
+  .nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; right: 0; height: 1px; background: var(--accent); transform: scaleX(0); transition: transform 0.3s; transform-origin: left; }
+  .nav-links a:hover { color: var(--white); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+  .nav-cta { background: var(--accent); color: #fff; padding: 0.6rem 1.4rem; border-radius: 2rem; font-size: 0.85rem; font-weight: 500; text-decoration: none; transition: transform 0.3s, box-shadow 0.3s; }
+  .nav-cta:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(255,77,0,0.4); }
+
+  .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 8rem 4rem 5rem; position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 70% 40%, rgba(255,77,0,0.06) 0%, transparent 60%), radial-gradient(ellipse 50% 40% at 20% 80%, rgba(200,255,0,0.03) 0%, transparent 50%); }
+  .hero-grid { position: absolute; inset: 0; opacity: 0.025; background-image: linear-gradient(var(--white) 1px, transparent 1px), linear-gradient(90deg, var(--white) 1px, transparent 1px); background-size: 80px 80px; }
+  .hero-eyebrow { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(255,77,0,0.1); border: 1px solid rgba(255,77,0,0.2); padding: 0.4rem 1rem; border-radius: 2rem; font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 2rem; animation: fadeUp 0.8s ease both; }
+  .hero-eyebrow::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
+  .hero-content { position: relative; z-index: 1; max-width: 920px; }
+  .hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(3.5rem, 8vw, 8rem); font-weight: 800; line-height: 0.95; letter-spacing: -0.04em; animation: fadeUp 0.8s 0.1s ease both; }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero h1 .outline { -webkit-text-stroke: 1px rgba(245,242,238,0.25); color: transparent; }
+  .hero-sub { margin-top: 2rem; max-width: 520px; font-size: 1.1rem; line-height: 1.7; color: var(--muted); animation: fadeUp 0.8s 0.2s ease both; }
+  .hero-actions { display: flex; gap: 1rem; align-items: center; margin-top: 3rem; animation: fadeUp 0.8s 0.3s ease both; }
+  .btn-primary { background: var(--accent); color: #fff; padding: 1rem 2.2rem; border-radius: 3rem; font-size: 0.95rem; font-weight: 500; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; transition: transform 0.3s, box-shadow 0.3s; }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 20px 50px rgba(255,77,0,0.3); }
+  .btn-ghost { border: 1px solid var(--border); color: var(--muted); padding: 1rem 2rem; border-radius: 3rem; font-size: 0.95rem; text-decoration: none; transition: border-color 0.3s, color 0.3s; }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.3); color: var(--white); }
+  .marquee-wrap { position: absolute; bottom: 0; left: 0; right: 0; border-top: 1px solid var(--border); overflow: hidden; padding: 1rem 0; }
+  .marquee { display: flex; gap: 3rem; animation: scroll 28s linear infinite; width: max-content; }
+  .marquee span { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); white-space: nowrap; display: flex; align-items: center; gap: 1rem; }
+  .marquee span::before { content: '✦'; color: var(--accent); }
+  @keyframes scroll { from{transform:translateX(0)}to{transform:translateX(-50%)} }
+
+  .stats { display: grid; grid-template-columns: repeat(4,1fr); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .stat-item { padding: 3rem 2.5rem; border-right: 1px solid var(--border); }
+  .stat-item:last-child { border-right: none; }
+  .stat-num { font-family: 'Syne', sans-serif; font-size: 3rem; font-weight: 800; letter-spacing: -0.04em; }
+  .stat-num sup { color: var(--accent); }
+  .stat-label { color: var(--muted); font-size: 0.85rem; margin-top: 0.3rem; }
+
+  section { padding: 7rem 4rem; }
+  .section-header { margin-bottom: 4rem; }
+  .tag { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; display: block; }
+  h2 { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
+  h2 em { font-style: italic; color: var(--accent); }
+
+  .services-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5px; background: var(--border); border: 1px solid var(--border); }
+  .service-card { background: var(--black); padding: 3rem; position: relative; overflow: hidden; transition: background 0.4s; cursor: default; }
+  .service-card::after { content: ''; position: absolute; inset: 0; background: var(--accent); opacity: 0; transition: opacity 0.4s; z-index: 0; }
+  .service-card:hover::after { opacity: 0.04; }
+  .service-card:hover { background: #111; }
+  .service-num { font-family: 'Syne', sans-serif; font-size: 0.7rem; letter-spacing: 0.2em; color: var(--accent); opacity: 0.6; position: relative; z-index: 1; }
+  .service-icon { font-size: 2.5rem; margin: 1.5rem 0 1rem; position: relative; z-index: 1; display: block; transition: transform 0.4s; }
+  .service-card:hover .service-icon { transform: scale(1.1) rotate(-5deg); }
+  .service-title { font-family: 'Syne', sans-serif; font-size: 1.25rem; font-weight: 700; margin-bottom: 0.75rem; position: relative; z-index: 1; }
+  .service-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.7; position: relative; z-index: 1; }
+  .service-arrow { position: absolute; bottom: 2rem; right: 2rem; font-size: 1.2rem; opacity: 0; transition: opacity 0.3s, transform 0.3s; color: var(--accent); z-index: 1; }
+  .service-card:hover .service-arrow { opacity: 1; transform: translate(3px,-3px); }
+
+  .portfolio-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1.5rem; margin-top: 3rem; }
+  .portfolio-card { position: relative; overflow: hidden; border-radius: 12px; aspect-ratio: 4/3; cursor: pointer; transition: transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94); }
+  .portfolio-card:hover { transform: scale(1.02); }
+  .portfolio-card:first-child { grid-column: span 2; aspect-ratio: 16/7; }
+  .portfolio-bg { position: absolute; inset: 0; transition: transform 0.6s ease; }
+  .portfolio-card:hover .portfolio-bg { transform: scale(1.08); }
+  .p1 { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%); }
+  .p2 { background: linear-gradient(135deg, #2d1b69 0%, #1a0533 100%); }
+  .p3 { background: linear-gradient(135deg, #0e0e0e 0%, #1f1f1f 50%, #2a1000 100%); }
+  .p4 { background: linear-gradient(135deg, #0d2137 0%, #1b4d6e 100%); }
+  .p5 { background: linear-gradient(135deg, #0e1a0a 0%, #1c3510 100%); }
+  .p-deco { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; opacity: 0.1; font-family: 'Syne', sans-serif; font-size: 8rem; font-weight: 800; color: white; letter-spacing: -0.1em; }
+  .portfolio-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%); padding: 2rem; display: flex; flex-direction: column; justify-content: flex-end; opacity: 0; transition: opacity 0.4s; }
+  .portfolio-card:hover .portfolio-overlay { opacity: 1; }
+  .portfolio-info h3 { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .portfolio-info p { font-size: 0.85rem; color: rgba(255,255,255,0.6); }
+  .p-tag { display: inline-block; background: var(--accent); color: white; padding: 0.25rem 0.75rem; border-radius: 2rem; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem; align-self: flex-start; }
+
+  .grid-el { position: absolute; inset: 0; background-image: repeating-linear-gradient(0deg,transparent,transparent 30px,rgba(255,255,255,0.03) 30px,rgba(255,255,255,0.03) 31px), repeating-linear-gradient(90deg,transparent,transparent 30px,rgba(255,255,255,0.03) 30px,rgba(255,255,255,0.03) 31px); }
+  .ring-el { position: absolute; border-radius: 50%; border: 1px solid rgba(255,255,255,0.1); }
+
+  .process-list { display: grid; grid-template-columns: repeat(4,1fr); gap: 2rem; }
+  .process-step { position: relative; }
+  .process-step:not(:last-child)::after { content: '→'; position: absolute; top: 1.5rem; right: -1rem; color: rgba(255,255,255,0.1); font-size: 1.2rem; }
+  .step-num { font-family: 'Syne', sans-serif; font-size: 0.65rem; letter-spacing: 0.2em; color: var(--accent); margin-bottom: 1.5rem; display: block; }
+  .step-title { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem; }
+  .step-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+
+  .testi-section { background: #070707; }
+  .testi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+  .testi-card { background: #111; border: 1px solid var(--border); border-radius: 16px; padding: 2rem; transition: transform 0.3s, border-color 0.3s; }
+  .testi-card:hover { transform: translateY(-5px); border-color: rgba(255,77,0,0.3); }
+  .stars { color: var(--accent); font-size: 0.85rem; margin-bottom: 1rem; }
+  .testi-text { font-size: 0.95rem; line-height: 1.7; color: rgba(245,242,238,0.8); margin-bottom: 1.5rem; }
+  .testi-author { display: flex; align-items: center; gap: 0.75rem; }
+  .testi-av { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.8rem; color: #000; }
+  .testi-name { font-weight: 500; font-size: 0.9rem; }
+  .testi-role { font-size: 0.8rem; color: var(--muted); }
+
+  .pricing-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+  .pricing-card { border: 1px solid var(--border); border-radius: 16px; padding: 2.5rem; position: relative; overflow: hidden; transition: transform 0.3s; background: #0d0d0d; }
+  .pricing-card.featured { border-color: var(--accent); background: #110800; }
+  .pricing-card:hover { transform: translateY(-5px); }
+  .feat-badge { position: absolute; top: 1.5rem; right: 1.5rem; background: var(--accent); color: white; padding: 0.2rem 0.7rem; border-radius: 2rem; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; }
+  .price-plan { font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+  .price-amount { font-family: 'Syne', sans-serif; font-size: 2.8rem; font-weight: 800; letter-spacing: -0.04em; }
+  .price-amount span { font-size: 1rem; font-weight: 300; color: var(--muted); }
+  .price-features { list-style: none; margin: 2rem 0; display: flex; flex-direction: column; gap: 0.75rem; }
+  .price-features li { font-size: 0.9rem; color: var(--muted); display: flex; align-items: center; gap: 0.5rem; }
+  .price-features li::before { content: '✓'; color: var(--accent); font-size: 0.8rem; flex-shrink: 0; }
+  .price-btn { display: block; text-align: center; padding: 0.9rem; border-radius: 3rem; font-size: 0.9rem; font-weight: 500; text-decoration: none; transition: all 0.3s; border: 1px solid; }
+  .btn-outline { border-color: var(--border); color: var(--muted); }
+  .btn-outline:hover { border-color: rgba(255,255,255,0.3); color: var(--white); }
+  .btn-fill { background: var(--accent); border-color: var(--accent); color: white; }
+  .btn-fill:hover { box-shadow: 0 10px 40px rgba(255,77,0,0.4); transform: scale(1.02); }
+
+  .cta-section { background: var(--accent); padding: 7rem 4rem; position: relative; overflow: hidden; }
+  .cta-section::before { content: "LET'S TALK"; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-family: 'Syne', sans-serif; font-size: clamp(5rem,14vw,15rem); font-weight: 800; letter-spacing: -0.05em; color: rgba(0,0,0,0.07); white-space: nowrap; pointer-events: none; z-index: 0; }
+  .cta-inner { position: relative; z-index: 1; text-align: center; }
+  .cta-inner h2 { font-family: 'Syne', sans-serif; font-size: clamp(2.5rem, 5vw, 5rem); font-weight: 800; color: #0a0a0a; letter-spacing: -0.04em; line-height: 1; margin-bottom: 1.5rem; }
+  .cta-inner p { color: rgba(0,0,0,0.55); font-size: 1.1rem; margin-bottom: 3rem; }
+  .wa-btn { display: inline-flex; align-items: center; gap: 0.75rem; background: var(--black); color: var(--white); padding: 1.1rem 2.5rem; border-radius: 3rem; font-size: 1rem; font-weight: 500; text-decoration: none; transition: transform 0.3s, box-shadow 0.3s; }
+  .wa-btn:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.35); }
+  .wa-btn svg { width: 22px; height: 22px; fill: #25d366; flex-shrink: 0; }
+
+  footer { padding: 4rem 4rem 2rem; border-top: 1px solid var(--border); }
+  .footer-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4rem; gap: 4rem; }
+  .footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.8rem; letter-spacing: -0.03em; }
+  .footer-logo span { color: var(--accent); }
+  .footer-tagline { color: var(--muted); font-size: 0.85rem; margin-top: 0.4rem; }
+  .footer-cols { display: grid; grid-template-columns: repeat(3,1fr); gap: 3rem; }
+  .footer-col h4 { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.5rem; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+  .footer-col a { color: rgba(245,242,238,0.55); text-decoration: none; font-size: 0.9rem; transition: color 0.3s; }
+  .footer-col a:hover { color: var(--white); }
+  .footer-bottom { border-top: 1px solid var(--border); padding-top: 2rem; display: flex; justify-content: space-between; align-items: center; }
+  .footer-bottom p { font-size: 0.8rem; color: var(--muted); }
+  .socials { display: flex; gap: 0.75rem; }
+  .socials a { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--muted); text-decoration: none; font-size: 0.75rem; transition: all 0.3s; }
+  .socials a:hover { border-color: var(--accent); color: var(--accent); }
+
+  .float-wa { position: fixed; bottom: 2rem; right: 2rem; z-index: 200; background: #25d366; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; box-shadow: 0 8px 30px rgba(37,211,102,0.4); animation: floatAnim 3s ease-in-out infinite; }
+  .float-wa:hover { box-shadow: 0 12px 40px rgba(37,211,102,0.6); transform: scale(1.1) !important; }
+  .float-wa svg { width: 28px; height: 28px; fill: white; }
+  .float-tooltip { position: absolute; right: 68px; top: 50%; transform: translateY(-50%); background: #111; color: white; padding: 0.4rem 0.9rem; border-radius: 2rem; font-size: 0.8rem; white-space: nowrap; border: 1px solid var(--border); opacity: 0; transition: opacity 0.3s; pointer-events: none; font-family: 'DM Sans', sans-serif; }
+  .float-wa:hover .float-tooltip { opacity: 1; }
+  @keyframes floatAnim { 0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)} }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)} }
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .d1{transition-delay:0.1s}.d2{transition-delay:0.2s}.d3{transition-delay:0.3s}.d4{transition-delay:0.4s}
+
+  @media(max-width:900px){
+    nav{padding:1.2rem 1.5rem}
+    .nav-links{display:none}
+    section{padding:4rem 1.5rem}
+    .hero{padding:6rem 1.5rem 5rem}
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .stat-item{border-right:none;border-bottom:1px solid var(--border)}
+    .services-grid{grid-template-columns:1fr}
+    .portfolio-grid{grid-template-columns:1fr}
+    .portfolio-card:first-child{grid-column:span 1}
+    .process-list{grid-template-columns:repeat(2,1fr)}
+    .testi-grid{grid-template-columns:1fr}
+    .pricing-grid{grid-template-columns:1fr}
+    .footer-top{flex-direction:column}
+    .footer-cols{grid-template-columns:1fr}
+    .footer-bottom{flex-direction:column;gap:1rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- FLOAT WHATSAPP -->
+<a href="https://wa.me/919080322855?text=Hi%20SAN%20Creative%20Studio!" target="_blank" class="float-wa">
+  <div class="float-tooltip">Chat with us</div>
+  <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">SAN<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="https://wa.me/919080322855" target="_blank" class="nav-cta">Let's Talk →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Creative Studio · Tamil Nadu · Est. 2020</div>
+    <h1>We Design<br><em>Bold</em> &amp; <span class="outline">Brilliant</span><br>Experiences.</h1>
+    <p class="hero-sub">SAN Creative Studio crafts unforgettable brands, immersive UI/UX, AI-powered videos, and packaging that makes people stop and stare.</p>
+    <div class="hero-actions">
+      <a href="https://wa.me/919080322855?text=Hi%20SAN%20Creative%20Studio!" target="_blank" class="btn-primary">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="opacity:.85"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp Us
+      </a>
+      <a href="#work" class="btn-ghost">See Our Work ↓</a>
+    </div>
+  </div>
+  <div class="marquee-wrap">
+    <div class="marquee">
+      <span>UI/UX Design</span><span>Branding &amp; Identity</span><span>AI Video Production</span><span>Packaging Design</span><span>Social Media Design</span><span>Motion Graphics</span><span>Web Design</span><span>Brand Strategy</span>
+      <span>UI/UX Design</span><span>Branding &amp; Identity</span><span>AI Video Production</span><span>Packaging Design</span><span>Social Media Design</span><span>Motion Graphics</span><span>Web Design</span><span>Brand Strategy</span>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats" id="stats">
+  <div class="stat-item reveal"><div class="stat-num"><span id="s1">0</span><sup>+</sup></div><div class="stat-label">Projects Delivered</div></div>
+  <div class="stat-item reveal d1"><div class="stat-num"><span id="s2">0</span><sup>+</sup></div><div class="stat-label">Happy Clients</div></div>
+  <div class="stat-item reveal d2"><div class="stat-num"><span id="s3">0</span><sup>+</sup></div><div class="stat-label">Brands Built</div></div>
+  <div class="stat-item reveal d3"><div class="stat-num"><span id="s4">0</span><sup>%</sup></div><div class="stat-label">Client Retention</div></div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-header reveal"><span class="tag">What We Do</span><h2>Creative Services<br>That <em>Actually</em> Work</h2></div>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <div class="service-num">01</div>
+      <span class="service-icon">✦</span>
+      <div class="service-title">UI/UX Design</div>
+      <div class="service-desc">User-centred interfaces for web and mobile. From wireframes to pixel-perfect prototypes, we craft experiences users love to navigate.</div>
+      <div class="service-arrow">↗</div>
+    </div>
+    <div class="service-card reveal d1">
+      <div class="service-num">02</div>
+      <span class="service-icon">◈</span>
+      <div class="service-title">Branding &amp; Identity</div>
+      <div class="service-desc">Logos, brand guidelines, visual systems, and tone of voice. We build brands people remember and trust for years.</div>
+      <div class="service-arrow">↗</div>
+    </div>
+    <div class="service-card reveal d2">
+      <div class="service-num">03</div>
+      <span class="service-icon">▲</span>
+      <div class="service-title">Packaging Design</div>
+      <div class="service-desc">Shelf-stopping packaging for FMCG, food, cosmetics, and lifestyle brands. We design packaging that sells before it's opened.</div>
+      <div class="service-arrow">↗</div>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-num">04</div>
+      <span class="service-icon">◉</span>
+      <div class="service-title">AI Video Production</div>
+      <div class="service-desc">Next-gen AI-generated videos for ads, promos, and social media. Fast, cinematic, and impossible to scroll past.</div>
+      <div class="service-arrow">↗</div>
+    </div>
+    <div class="service-card reveal d1">
+      <div class="service-num">05</div>
+      <span class="service-icon">⬡</span>
+      <div class="service-title">Social Media Design</div>
+      <div class="service-desc">Scroll-stopping content, reels graphics, story templates, and brand consistency across every platform.</div>
+      <div class="service-arrow">↗</div>
+    </div>
+    <div class="service-card reveal d2">
+      <div class="service-num">06</div>
+      <span class="service-icon">✧</span>
+      <div class="service-title">Motion &amp; Print</div>
+      <div class="service-desc">Animated logos, motion graphics, brochures, and banners. Everything your brand needs to shine offline too.</div>
+      <div class="service-arrow">↗</div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="work" style="background:#060606">
+  <div class="section-header reveal"><span class="tag">Our Work</span><h2>Projects We're <em>Proud Of</em></h2></div>
+  <div class="portfolio-grid">
+
+    <div class="portfolio-card reveal">
+      <div class="portfolio-bg p1">
+        <div class="grid-el"></div>
+        <div class="ring-el" style="width:300px;height:300px;top:50%;left:60%;transform:translate(-50%,-50%)"></div>
+        <div class="ring-el" style="width:180px;height:180px;top:50%;left:60%;transform:translate(-50%,-50%)"></div>
+      </div>
+      <div class="p-deco">NOVA</div>
+      <div class="portfolio-overlay">
+        <span class="p-tag">Branding + UI/UX</span>
+        <div class="portfolio-info"><h3>Nova Fintech App</h3><p>Complete brand identity &amp; mobile UI for a fintech startup</p></div>
+      </div>
+    </div>
+
+    <div class="portfolio-card reveal">
+      <div class="portfolio-bg p2" style="display:flex;align-items:flex-end;padding:20px;gap:4px">
+        <div style="flex:1;height:40px;background:rgba(200,255,0,0.25);border-radius:4px 4px 0 0"></div>
+        <div style="flex:1;height:65px;background:rgba(200,255,0,0.25);border-radius:4px 4px 0 0"></div>
+        <div style="flex:1;height:50px;background:rgba(200,255,0,0.25);border-radius:4px 4px 0 0"></div>
+        <div style="flex:1;height:85px;background:rgba(200,255,0,0.35);border-radius:4px 4px 0 0"></div>
+        <div style="flex:1;height:55px;background:rgba(200,255,0,0.25);border-radius:4px 4px 0 0"></div>
+        <div style="flex:1;height:95px;background:rgba(200,255,0,0.4);border-radius:4px 4px 0 0"></div>
+      </div>
+      <div class="p-deco" style="font-size:3rem">RISE</div>
+      <div class="portfolio-overlay">
+        <span class="p-tag">AI Video</span>
+        <div class="portfolio-info"><h3>Rise Fitness AI Promo</h3><p>AI-generated campaign video — 2M+ organic views</p></div>
+      </div>
+    </div>
+
+    <div class="portfolio-card reveal d1">
+      <div class="portfolio-bg p3">
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:rgba(255,77,0,0.25);white-space:nowrap;letter-spacing:-0.05em">BOLD BREW</div>
+      </div>
+      <div class="portfolio-overlay">
+        <span class="p-tag">Packaging Design</span>
+        <div class="portfolio-info"><h3>Bold Brew Coffee</h3><p>Premium packaging for D2C coffee brand launch</p></div>
+      </div>
+    </div>
+
+    <div class="portfolio-card reveal d2">
+      <div class="portfolio-bg p4" style="display:flex;align-items:center;justify-content:center">
+        <div style="width:80px;height:140px;border:2px solid rgba(255,255,255,0.2);border-radius:12px;background:rgba(255,255,255,0.05);position:relative">
+          <div style="position:absolute;top:10px;left:6px;right:6px;bottom:10px;background:rgba(255,255,255,0.07);border-radius:8px;padding:8px;display:flex;flex-direction:column;gap:4px">
+            <div style="height:4px;background:rgba(255,255,255,0.15);border-radius:2px;width:60%"></div>
+            <div style="height:4px;background:rgba(255,255,255,0.15);border-radius:2px"></div>
+            <div style="height:4px;background:rgba(255,255,255,0.15);border-radius:2px;width:75%"></div>
+            <div style="height:4px;background:rgba(255,255,255,0.1);border-radius:2px;width:50%"></div>
+            <div style="height:14px;background:rgba(255,77,0,0.4);border-radius:4px;margin-top:auto"></div>
+          </div>
+        </div>
+      </div>
+      <div class="p-deco" style="font-size:4rem">ZEAL</div>
+      <div class="portfolio-overlay">
+        <span class="p-tag">UI/UX Design</span>
+        <div class="portfolio-info"><h3>Zeal E-Commerce App</h3><p>End-to-end mobile UX for fashion retail platform</p></div>
+      </div>
+    </div>
+
+    <div class="portfolio-card reveal d3">
+      <div class="portfolio-bg p5" style="display:flex;align-items:center;justify-content:center">
+        <div style="font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;color:rgba(200,255,0,0.2);letter-spacing:-0.04em">VERDE</div>
+      </div>
+      <div class="portfolio-overlay">
+        <span class="p-tag">Brand Identity</span>
+        <div class="portfolio-info"><h3>Verde Organics</h3><p>Organic skincare brand identity from scratch</p></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="section-header reveal"><span class="tag">How We Work</span><h2>Our Creative <em>Process</em></h2></div>
+  <div class="process-list">
+    <div class="process-step reveal"><span class="step-num">STEP 01</span><div class="step-title">Discovery</div><div class="step-desc">We dive into your brand, audience, and goals. A thorough brief sets creative direction before a pixel is placed.</div></div>
+    <div class="process-step reveal d1"><span class="step-num">STEP 02</span><div class="step-title">Strategy</div><div class="step-desc">Mood boards, visual strategy, and creative direction. No surprises — just a clear roadmap to the final output.</div></div>
+    <div class="process-step reveal d2"><span class="step-num">STEP 03</span><div class="step-title">Creation</div><div class="step-desc">Our designers bring it to life with precision, craft, and attention to every micro-detail that makes work feel premium.</div></div>
+    <div class="process-step reveal d3"><span class="step-num">STEP 04</span><div class="step-title">Deliver &amp; Scale</div><div class="step-desc">Final files, brand guides, and ongoing support. We help your brand grow long after delivery.</div></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testi-section">
+  <div class="section-header reveal"><span class="tag">Client Stories</span><h2>What They Say <em>About Us</em></h2></div>
+  <div class="testi-grid">
+    <div class="testi-card reveal"><div class="stars">★★★★★</div><p class="testi-text">"SAN completely transformed our brand. The new identity is exactly what we envisioned but couldn't put into words. Incredible team."</p><div class="testi-author"><div class="testi-av" style="background:var(--accent)">AK</div><div><div class="testi-name">Arjun Kumar</div><div class="testi-role">Founder, Nova Fintech</div></div></div></div>
+    <div class="testi-card reveal d1"><div class="stars">★★★★★</div><p class="testi-text">"The AI promo video got 2 million views organically. Our marketing team was stunned. Worth every rupee and more."</p><div class="testi-author"><div class="testi-av" style="background:#c8ff00">PM</div><div><div class="testi-name">Priya Menon</div><div class="testi-role">Marketing Head, Rise Fitness</div></div></div></div>
+    <div class="testi-card reveal d2"><div class="stars">★★★★★</div><p class="testi-text">"Our coffee packaging feedback at launch was phenomenal. Retailers loved it. Customers bought it for the box first!"</p><div class="testi-author"><div class="testi-av" style="background:#c084fc">RS</div><div><div class="testi-name">Ravi Selvam</div><div class="testi-role">CEO, Bold Brew Coffee</div></div></div></div>
+    <div class="testi-card reveal"><div class="stars">★★★★★</div><p class="testi-text">"The UI/UX work was so clean and intuitive. Our app retention doubled after the redesign. Best design investment we ever made."</p><div class="testi-author"><div class="testi-av" style="background:#22d3ee">NP</div><div><div class="testi-name">Nisha Patel</div><div class="testi-role">Product Lead, Zeal App</div></div></div></div>
+    <div class="testi-card reveal d1"><div class="stars">★★★★★</div><p class="testi-text">"Fast turnaround, professional communication, results that exceeded our brief. SAN is the only design partner I recommend."</p><div class="testi-author"><div class="testi-av" style="background:#fb923c">KR</div><div><div class="testi-name">Kavitha Rajan</div><div class="testi-role">Director, Verde Organics</div></div></div></div>
+    <div class="testi-card reveal d2"><div class="stars">★★★★★</div><p class="testi-text">"From concept to delivery in 10 days. The social media templates they designed save us hours every week. Super talented!"</p><div class="testi-author"><div class="testi-av" style="background:#a3e635">SM</div><div><div class="testi-name">Suresh Murugan</div><div class="testi-role">Owner, Spice Route Foods</div></div></div></div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-header reveal"><span class="tag">Pricing</span><h2>Transparent Plans,<br><em>Zero Surprises</em></h2></div>
+  <div class="pricing-grid">
+    <div class="pricing-card reveal">
+      <div class="price-plan">Starter</div>
+      <div class="price-amount">₹15,000<span> / project</span></div>
+      <ul class="price-features">
+        <li>Logo &amp; basic brand identity</li>
+        <li>2 revision rounds</li>
+        <li>Social media kit (5 templates)</li>
+        <li>Source files included</li>
+        <li>7-day delivery</li>
+      </ul>
+      <a href="https://wa.me/919080322855" target="_blank" class="price-btn btn-outline">Get Started →</a>
+    </div>
+    <div class="pricing-card featured reveal d1">
+      <span class="feat-badge">Popular</span>
+      <div class="price-plan">Growth</div>
+      <div class="price-amount">₹45,000<span> / project</span></div>
+      <ul class="price-features">
+        <li>Complete brand identity system</li>
+        <li>UI/UX design (up to 10 screens)</li>
+        <li>Packaging design (1 SKU)</li>
+        <li>Social media kit (15 templates)</li>
+        <li>1 AI Promo Video (30 sec)</li>
+        <li>Unlimited revisions</li>
+        <li>Brand guidelines document</li>
+      </ul>
+      <a href="https://wa.me/919080322855" target="_blank" class="price-btn btn-fill">WhatsApp Now →</a>
+    </div>
+    <div class="pricing-card reveal d2">
+      <div class="price-plan">Enterprise</div>
+      <div class="price-amount">Custom<span> pricing</span></div>
+      <ul class="price-features">
+        <li>Full-scope brand transformation</li>
+        <li>Complete UI/UX product design</li>
+        <li>Unlimited packaging SKUs</li>
+        <li>Monthly retainer support</li>
+        <li>AI Video series (3–5 videos)</li>
+        <li>Dedicated designer assigned</li>
+        <li>Strategy consultation</li>
+      </ul>
+      <a href="https://wa.me/919080322855" target="_blank" class="price-btn btn-outline">Let's Talk →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="contact" class="cta-section">
+  <div class="cta-inner">
+    <h2>Ready to Build<br>Something Bold?</h2>
+    <p>Drop us a WhatsApp message. We respond within the hour.</p>
+    <a href="https://wa.me/919080322855?text=Hi%20SAN%20Creative%20Studio!%20I%27m%20interested%20in%20your%20design%20services." target="_blank" class="wa-btn">
+      <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      WhatsApp Us · +91 90803 22855
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="footer-logo">SAN<span>.</span></div>
+      <div class="footer-tagline">Creative Studio · Kayalpattinam, Tamil Nadu</div>
+    </div>
+    <div class="footer-cols">
+      <div class="footer-col"><h4>Services</h4><ul><li><a href="#">UI/UX Design</a></li><li><a href="#">Branding</a></li><li><a href="#">Packaging</a></li><li><a href="#">AI Video</a></li><li><a href="#">Social Media</a></li></ul></div>
+      <div class="footer-col"><h4>Studio</h4><ul><li><a href="#">About Us</a></li><li><a href="#work">Portfolio</a></li><li><a href="#process">Process</a></li><li><a href="#pricing">Pricing</a></li></ul></div>
+      <div class="footer-col"><h4>Contact</h4><ul><li><a href="https://wa.me/919080322855">WhatsApp</a></li><li><a href="mailto:hello@sancreative.in">hello@sancreative.in</a></li><li><a href="#">Instagram</a></li><li><a href="#">LinkedIn</a></li></ul></div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 SAN Creative Studio. All rights reserved.</p>
+    <div class="socials">
+      <a href="https://wa.me/919080322855" title="WhatsApp">W</a>
+      <a href="#" title="Instagram">IG</a>
+      <a href="#" title="LinkedIn">in</a>
+      <a href="#" title="Behance">Be</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px'});
+  (function animRing(){rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing)})();
+
+  const reveals=document.querySelectorAll('.reveal');
+  const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:0.12});
+  reveals.forEach(el=>obs.observe(el));
+
+  function animCount(id,target){
+    const el=document.getElementById(id);if(!el)return;
+    let cur=0,step=target/55;
+    const t=setInterval(()=>{cur+=step;if(cur>=target){cur=target;clearInterval(t)}el.textContent=Math.floor(cur)},20);
+  }
+  const statsObs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting){animCount('s1',200);animCount('s2',120);animCount('s3',85);animCount('s4',97);statsObs.disconnect()}})
+  },{threshold:0.4});
+  const statsEl=document.getElementById('stats');
+  if(statsEl)statsObs.observe(statsEl);
+
+  window.addEventListener('scroll',()=>{
+    const nav=document.getElementById('nav');
+    nav.style.padding=window.scrollY>60?'1rem 4rem':'1.5rem 4rem';
+  });
+</script>
+</body>
+</html>
